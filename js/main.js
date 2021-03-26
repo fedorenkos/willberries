@@ -50,9 +50,11 @@ modalCart.addEventListener('click', (event) => {
 
 // goods
 
-const more = document.querySelector('.more');
-const navigationLink = document.querySelectorAll('.navigation-link');
+const viewAll = document.querySelectorAll('.view-all');
+const navigationLink = document.querySelectorAll('.navigation-link:not(.view-all)');
 const longGoodsList = document.querySelector('.long-goods-list');
+const showAcsesories = document.querySelectorAll('.show-acsesories');
+const showClothing = document.querySelectorAll('.show-clothing');
 
 const getGoods = async function(){
 	const result = await fetch('db/db.json');
@@ -65,7 +67,7 @@ const getGoods = async function(){
 const createCard = function({label, img, name, description, id, price}){
 	const card = document.createElement('div');
 	card.className = 'col-lg-3 col-sm-6';
-	
+
 	card.innerHTML = `
 		<div class="goods-card">
 			${label ? `<span class="label">${label}</span>` : '' }
@@ -89,10 +91,14 @@ const renderCards = function(data){
 	document.body.classList.add('show-goods')
 };
 
-more.addEventListener('click', (event) => {
+const showAll = (event) => {
 	event.preventDefault();
 	getGoods().then(renderCards);
-});
+}
+viewAll.forEach((elem) => {
+	elem.addEventListener('click', showAll);
+}) 
+
 
 const filterCards = function(field, value){
 	getGoods()
@@ -113,3 +119,16 @@ navigationLink.forEach(function(link){
 		filterCards(field, value);
 	})
 });
+
+showAcsesories.forEach(item => {
+	item.addEventListener('click', event =>{
+		event.preventDefault();
+		filterCards('category', 'Acsessories')
+	})
+})
+showClothing.forEach(item => {
+	item.addEventListener('click', event =>{
+		event.preventDefault();
+		filterCards('category', 'Clothing')
+	})
+})
